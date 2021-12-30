@@ -39,6 +39,10 @@ catch (Exception ex)
     scope.Dispose();
 }*/
 
+//app.Services.AddCors();
+app.UseCors(opt => {
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+});
 
 
 // Configure the HTTP request pipeline.
