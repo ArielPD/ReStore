@@ -2,6 +2,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import ListItemText from "@mui/material/ListItemText";
+import {Link} from "react-router-dom";
 
 import { Product } from "../../app/models/product";
 import { CardHeader, Typography, Card, CardActions, CardMedia, CardContent, Button } from "@mui/material";
@@ -43,7 +44,7 @@ const ProductCard = ({product}: Props) => {
             </CardContent>
             <CardActions>
                 <Button  size="small">Add to cart</Button>
-                <Button  size="small">View</Button>
+                <Button component={Link} to={`/catalog/${product.id}`} size="small">View</Button>
             </CardActions>
         </Card>
 
