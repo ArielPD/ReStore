@@ -2,8 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './app/layout/styles.css';
 import App from './app/layout/App';
-import {BrowserRouter, Routes} from 'react-router-dom';
+import {BrowserRouter, Routes, Router} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import {createBrowserHistory} from "history";
+
+export const history = createBrowserHistory();
 
 ReactDOM.render(
   <React.StrictMode>

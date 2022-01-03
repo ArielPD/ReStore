@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import {Product} from "../../app/models/product";
 import ProductList from "./ProductList";
 import Button from "@mui/material/Button";
+import agent from "../../app/api/agent"
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 /*interface Props {
     products: Product[];
@@ -11,12 +13,19 @@ import Button from "@mui/material/Button";
 export default function Catalog() {
 
     const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(()=> {
-        fetch('http://localhost:5000/api/products')
-        .then(response => response.json())
-        .then(data => setProducts(data))
+        // fetch('http://localhost:5000/api/products')
+        // .then(response => response.json())
+        // .then(data => setProducts(data))
+        agent.Catalog.list()
+        .then(products => setProducts(products))
+        .catch(error => console.log(error))
+        .finally(() => setLoading(false));
       }, [])
+
+      if (loading) return <LoadingComponent message='Loading products...'/>
     
     //   function addProduct() {
     //     setProducts(prevState => [...prevState, 
