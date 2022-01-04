@@ -5,13 +5,16 @@ import App from './app/layout/App';
 import {BrowserRouter, Routes, Router} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import {createBrowserHistory} from "history";
+import { StoreProvider } from './app/context/StoreContext'
 
 export const history = createBrowserHistory();
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-        <App />
+      <StoreProvider>
+          <App />
+      </StoreProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
