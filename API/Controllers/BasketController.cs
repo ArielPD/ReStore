@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
@@ -13,12 +14,10 @@ namespace API.Controllers
     public class BasketController : BaseApiController
     {
         private readonly StoreContext _context;
-        //private readonly HttpContext _http;
-        
-        public BasketController(StoreContext context /*,  IHttpContextAccessor httpContextAccessor*/)
+
+        public BasketController(StoreContext context)
         {
             _context = context;
-            //_http = httpContextAccessor.HttpContext;
         }
 
         [HttpGet(Name="GetBasket")]
@@ -40,7 +39,8 @@ namespace API.Controllers
             
             //get product
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return new NotFoundResult();
+            //new ProblemDetails{Title="Product Not Found"}
+            if (product == null) return new BadRequestResult();
             
             //add item
             basket.AddItem(product, quantity);
@@ -74,11 +74,14 @@ namespace API.Controllers
         
         private async Task<Basket?> RetrieveBasket()
         {
+            HttpContext httpContext = new DefaultHttpContext();
+            System.Console.WriteLine("cookie test");
+            System.Console.WriteLine(httpContext.Request.Cookies["buyerId"]);
             return  await _context.Baskets
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
                 .FirstOrDefaultAsync();
-                //.FirstOrDefaultAsync(x => x.BuyerId == _http.Request.Cookies["buyerId"]);
+                //.FirstOrDefaultAsync(x => x.BuyerId == httpContext.Request.Cookies["buyerId"]);
            
         }
         
@@ -86,7 +89,10 @@ namespace API.Controllers
         {
             var buyerId = Guid.NewGuid().ToString();
             var cookieOptions = new CookieOptions {IsEssential = true, Expires = DateTime.Now.AddDays(30)};
-            //_http.Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+
+            HttpContext httpContext = new DefaultHttpContext();
+            httpContext.Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+            
             var basket = new Basket {BuyerId = buyerId};
             _context.Baskets.Add(basket);
             return basket;
