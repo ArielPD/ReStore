@@ -21,6 +21,8 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+        
+        Response.Cookies.Append("test", "test");
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateTime.Now.AddDays(index),
@@ -28,5 +30,14 @@ public class WeatherForecastController : ControllerBase
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
+    }
+    
+    [HttpGet("filters")]
+    public async Task<IActionResult> GetFilters()
+    {
+        var brands = new List<string>();
+        var types = new List<string>();
+        
+        return Ok(new {brands, types});
     }
 }

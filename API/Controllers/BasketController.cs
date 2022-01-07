@@ -39,23 +39,17 @@ namespace API.Controllers
             
             //get product
             var product = await _context.Products.FindAsync(productId);
-            //new ProblemDetails{Title="Product Not Found"}
-            if (product == null) return new BadRequestResult();
+            
+            if (product == null) return BadRequest(new ProblemDetails{Title="Product Not Found"});
             
             //add item
             basket.AddItem(product, quantity);
             // save changes
             var result = await _context.SaveChangesAsync() > 0;
-
-            if (result) return new CreatedAtRouteResult("GetBasket", MapBaktToDto(basket));
-            //if (result) return new OkResult(MapBaktToDto(basket));
-            //return new StatusCodeResult(201);
             
-            ProblemDetails problemDetails = new ProblemDetails();
-            problemDetails.Title = "Problem saving item to basket";
-            //return new BadRequestResult(problemDetails);
-            //return BadRequestObjectResult(new { message = "Problem saving item to basket", currentDate = DateTime.Now });
-            return new BadRequestResult();
+            if (result) return CreatedAtRoute("GetBasket", MapBaktToDto(basket));
+           
+            return BadRequest(new ProblemDetails { Title = "Problem saving item to basket" });
         }
 
         [HttpDelete]
@@ -74,14 +68,13 @@ namespace API.Controllers
         
         private async Task<Basket?> RetrieveBasket()
         {
-            HttpContext httpContext = new DefaultHttpContext();
             System.Console.WriteLine("cookie test");
-            System.Console.WriteLine(httpContext.Request.Cookies["buyerId"]);
+            System.Console.WriteLine(Request.Cookies["buyerId"]);
             return  await _context.Baskets
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
-                .FirstOrDefaultAsync();
-                //.FirstOrDefaultAsync(x => x.BuyerId == httpContext.Request.Cookies["buyerId"]);
+                //.FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(x => x.BuyerId == Request.Cookies["buyerId"]);
            
         }
         
@@ -89,9 +82,8 @@ namespace API.Controllers
         {
             var buyerId = Guid.NewGuid().ToString();
             var cookieOptions = new CookieOptions {IsEssential = true, Expires = DateTime.Now.AddDays(30)};
-
-            HttpContext httpContext = new DefaultHttpContext();
-            httpContext.Response.Cookies.Append("buyerId", buyerId, cookieOptions);
+            
+           Response.Cookies.Append("buyerId", buyerId, cookieOptions);
             
             var basket = new Basket {BuyerId = buyerId};
             _context.Baskets.Add(basket);
