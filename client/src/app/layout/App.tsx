@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import {Routes, Route} from "react-router-dom"
 import {CssBaseline, Container, createTheme, ThemeProvider} from "@mui/material"
 import { Product } from "../models/product";
@@ -20,7 +20,10 @@ import { getCookie } from "../util/util";
 import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
 import { useAppDispatch } from "../store/configureStore";
-import { setBasket } from "../../features/basket/basketSlice";
+import { fetchBasketAsync, setBasket } from "../../features/basket/basketSlice";
+import Login from "../../features/account/Login";
+import Register from "../../features/account/Register";
+import { fetchCurrentUser } from "../../features/account/accountSlice";
 
 const App = () => {
 
@@ -28,9 +31,19 @@ const App = () => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
+  const initApp = useCallback(async () =>  {
+    try {
+      await dispatch(fetchCurrentUser());
+      await dispatch(fetchBasketAsync());
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch])
+
   useEffect(() => {
-    const buyerId = getCookie('buyerId');
+    /*const buyerId = getCookie('buyerId');
     console.log('buyerId ' + buyerId)
+    dispatch(fetchCurrentUser());
     if (buyerId) {
         console.log("exist buyerId")
         agent.Basket.get()
@@ -41,8 +54,11 @@ const App = () => {
     } else {
         console.log("NOT exist buyerId")
         setLoading(false);
-    }
-  }, [dispatch])
+    }*/
+
+    initApp().then(() => setLoading(false));
+
+  }, [initApp])
 
   const [darkMode, setDarkMode] = useState(false);
   const paletteType = darkMode ? 'dark' : 'light';
@@ -61,6 +77,7 @@ const App = () => {
 
   if (loading) return <LoadingComponent message='Initialising app...'/>
 
+
   return (
     <ThemeProvider theme={theme}>
       <ToastContainer position='bottom-right' hideProgressBar/>
@@ -77,6 +94,8 @@ const App = () => {
           <Route path='/server-error' element={<ServerError/>} />
           <Route path='/basket' element={<BasketPage/>}/>
           <Route path='/checkout' element={<CheckoutPage/>}/>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
           <Route element={<NotFound />} />
         </Routes>
       </Container>
