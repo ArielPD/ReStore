@@ -1,13 +1,23 @@
 import { ComponentType } from "react";
-import { /*Redirect,*/ Route, /*RouteComponentProps,*/  RouteProps, useNavigate } from "react-router-dom";
+import { Route, RouteProps, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import CheckoutPage from "../../features/checkout/CheckoutPage";
 import { useAppSelector } from "../store/configureStore";
 
-/*interface Props extends RouteProps {
-  component: ComponentType<RouteComponentProps<any>> | ComponentType<any>;
-  roles?: string[];
-}*/
-
-export default function PrivateRoute() {
-    return (<></>)
+const PrivateRoute = ({ path }: RouteProps) => {
+  const { user } = useAppSelector(state => state.account);
+  const navigate = useNavigate();
+  if (!user) {
+    return navigate('/login');
   }
+
+  return (<Route path='/checkout' element={<CheckoutPage/>}/>);
+};
+
+export default PrivateRoute;
+
+
+
+
+
+

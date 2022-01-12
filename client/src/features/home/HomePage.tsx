@@ -1,10 +1,20 @@
-import {Typography} from "@mui/material"
+import { Box, Slider, Typography} from "@mui/material";;
+
 
 const HomePage = () => {
     return (
-        <Typography variant='h2'>
-            Home page
-        </Typography>
+        <>
+            
+            {/* <div>
+                <img src="/images/hero1.jpg" alt="hero" width={500}/>
+            </div> */}
+            
+            <Box>
+                <Typography variant='h1'>
+                    Welcome to the store
+                </Typography>
+            </Box>
+        </>
     )
 }
 

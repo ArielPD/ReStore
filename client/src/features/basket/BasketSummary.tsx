@@ -8,10 +8,11 @@ interface Props {
     subtotal?: number;
 }
 
-const BasketSummary = () => {
+const BasketSummary = ({subtotal} : Props) => {
     //const {basket} = useStoreContext();
     const {basket} = useAppSelector(state => state.basket)
-    const subtotal = basket?.items.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0;
+    if (subtotal === undefined)
+        subtotal = basket?.items.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0;
     const deliveryFee = subtotal > 10000 ? 0 : 500;
     
 

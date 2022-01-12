@@ -84,8 +84,18 @@ public class AccountController : BaseApiController
             Basket = userBasket?.MapBaketToDto()
         };
     }
-    
-    private async Task<Basket?> RetrieveBasket(string buyerId)
+
+    [Authorize]
+    [HttpGet("savedAddress")]
+    public async Task<ActionResult<UserAddress>> GetSavedAddress()
+    {
+        return await _userManager.Users
+            .Where(x => x.UserName == User.Identity.Name)
+            .Select(user => user.Address)
+            .FirstOrDefaultAsync();
+    }
+
+        private async Task<Basket?> RetrieveBasket(string buyerId)
     {
         if (string.IsNullOrEmpty(buyerId))
         {

@@ -24,6 +24,8 @@ import { fetchBasketAsync, setBasket } from "../../features/basket/basketSlice";
 import Login from "../../features/account/Login";
 import Register from "../../features/account/Register";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
+import OrderPage from "../../features/orders/OrderPage";
+/*import PrivateRoute from "./PrivateRoute";*/
 
 const App = () => {
 
@@ -96,7 +98,8 @@ const App = () => {
           <Route path='/checkout' element={<CheckoutPage/>}/>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route element={<NotFound />} />
+          <Route path='/orders' element={<OrderPage />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </Container>
     </ThemeProvider>
