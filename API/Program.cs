@@ -104,6 +104,10 @@ catch (Exception ex)
     scope.Dispose();
 }*/
 
+
+//app.UseDefaultFiles();
+//app.UseStaticFiles();
+
 //app.Services.AddCors();
 app.UseCors(opt => {
     //opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
@@ -128,5 +132,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+//app.MapFallbackToController("Index", "Fallback");
 
 app.Run();
