@@ -25,6 +25,7 @@ import Login from "../../features/account/Login";
 import Register from "../../features/account/Register";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
 import OrderPage from "../../features/orders/OrderPage";
+import Inventory from "../../features/admin/Inventory";
 /*import PrivateRoute from "./PrivateRoute";*/
 
 const App = () => {
@@ -99,6 +100,7 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/orders' element={<OrderPage />} />
+          <Route path='/inventory' element={<Inventory />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </Container>
